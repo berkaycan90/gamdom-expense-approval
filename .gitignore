@@ -1,0 +1,30 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment and credentials
+.env
+.env
+credentials.json
+secrets
+tokens.json
+
+# IDE  Editor
+.vscode
+.idea
+.code-workspace
+
+# Logs and temp files
+.log
+logs
+tmp
+__pycache__
+node_modules
+
+# n8n export temp files
+.backup.json
+.tmp.json
+.export.json
+
+# System folders
+desktop.ini
