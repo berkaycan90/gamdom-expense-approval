@@ -51,9 +51,9 @@ Workflow 3: Mock External API
 **Workflow 2:** Processes approval decision and calls API  
 **Workflow 3:** Simulates external expense system
 
-![Workflow 1](/assets/expense-validation-approval.png)
-![Workflow 2](/assets/expense-approval-handler.png)
-![Workflow 3](/assets/mock-external-api.png)
+![Workflow 1](assets/expense-validation-approval.png)
+![Workflow 2](assets/expense-approval-handler.png)
+![Workflow 3](assets/mock-external-api.png)
 
 ---
 
@@ -142,7 +142,7 @@ Import in order:
 5. Send approval email
 6. Log to Supabase
 
-![Approval Email](/assets/gmail-approval-request.png)
+![Approval Email](assets/gmail-approval-request.png)
 
 ### Workflow 2: Approval Handler
 
@@ -156,8 +156,8 @@ Import in order:
 - Log "rejected"
 - Email submitter
 
-![Slack Success](/assets/slack-success.png)
-![Slack Error](/assets/slack-validation-error.png)
+![Slack Success](assets/slack-success.png)
+![Slack Error](assets/slack-validation-error.png)
 
 ### Workflow 3: Mock API
 
@@ -242,7 +242,7 @@ status: approval_pending | approved | rejected | api_success | api_failed
 **Setup:** Workflow 3 deactivated  
 **Result:** Slack "Approved but API failed" ✅
 
-![Test Results](./assets/supabase-logs-overview.png)
+![Test Results](assets/supabase-logs-overview.png)
 
 **Coverage:** 6/6 scenarios passed (100%)
 
