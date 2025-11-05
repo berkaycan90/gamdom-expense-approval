@@ -141,6 +141,7 @@ Import in order:
 4. Validate amount (positive)
 5. Send approval email
 6. Log to Supabase
+
 ![Validation Error-Slack notification](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-validation-error.png)
 ![Approval Email](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/gmail-approval-request.png)
 
@@ -156,7 +157,7 @@ Import in order:
 - Log "rejected"
 - Email submitter
 
-![Rejection E-mail]https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/gmail-rejection-notification.png
+![Rejection E-mail](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/gmail-rejection-notification.png)
 ![Slack Success(https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-success.png)
 ![Slack Error](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-api-failed.png)
 
@@ -242,6 +243,7 @@ status: approval_pending | approved | rejected | api_success | api_failed
 #### ⚠️ Test 6: API Failure
 **Setup:** Workflow 3 deactivated  
 **Result:** Slack "Approved but API failed" ✅
+
 
 ![Test Results](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/setup/test-data.csv%20.csv)
 
