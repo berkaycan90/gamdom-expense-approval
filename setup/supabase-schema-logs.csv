@@ -1,0 +1,12 @@
+id,transaction_id,name,email,amount,department,expense_type,status,action_type,message,error_details,created_at
+17,TXN-2025-001,John Smith,james.taylor@company.com,1250.00,IT,Equipment,approval_pending,approval_request,Validation passed. Approval email sent to manager.,,2025-11-04 21:28:26.027942+00
+19,TXN-2025-001,John Smith,james.taylor@company.com,1250.00,IT,Equipment,approved,approval_request,Expense approved by manager. Proceeding to API call.,,2025-11-04 21:32:29.555788+00
+20,TXN-2025-001,John Smith,james.taylor@company.com,1250.00,,,api_success,api_call,Expense data successfully sent to external API,,2025-11-04 21:34:29.997974+00
+21,TXN-2025-006,James Taylor,info@ctrlaltfeel.com,3500.00,IT,Equipment,approval_pending,approval_request,Validation passed. Approval email sent to manager.,,2025-11-04 21:37:25.23363+00
+22,TXN-2025-006,James Taylor,info@ctrlaltfeel.com,3500.00,,,rejected,approval_request,Expense rejected by manager,,2025-11-04 21:39:54.746447+00
+23,TXN-2024-002,Sarah Johnson,sarah.johnson@company.com,8500.00,Sales,Travel,approval_pending,approval_request,Validation passed. Approval email sent to manager.,,2025-11-04 21:48:26.091452+00
+24,TXN-2024-002,,,,,,approved,approval_request,Expense approved by manager. Proceeding to API call.,,2025-11-04 21:49:10.15356+00
+25,TXN-2024-002,Sarah Johnson,sarah.johnson@company.com,8500.00,,,api_failed,api_call,External API returned error or failed to respond,,2025-11-04 21:49:10.325679+00
+26,TXN-2024-008,James Taylor,james.taylor@company.com,15000.00,IT,Equipment,approval_pending,approval_request,Validation passed. Approval email sent to manager.,,2025-11-04 21:53:25.997187+00
+27,TXN-2024-008,,,,,,approved,approval_request,Expense approved by manager. Proceeding to API call.,,2025-11-04 21:54:11.928299+00
+28,TXN-2024-008,James Taylor,james.taylor@company.com,15000.00,,,api_success,api_call,Expense data successfully sent to external API,,2025-11-04 21:54:12.246061+00

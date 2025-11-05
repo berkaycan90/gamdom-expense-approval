@@ -1,0 +1,10 @@
+﻿Timestamp;Name;Email;Department;Expense_Type;Amount;Transaction_ID;Description;Expected Result;Actual Result
+4.11.2025 09:00;John Smith;james.taylor@company.com;IT;Equipment;1250;TXN-2025-001;Wireless keyboard;✅ PASS: Validation → Approval Email → Approve → Supabase Log→  API Success → Supabase Log → Slack Success;OK
+4.11.2025 09:30;;empty@company.com;HR;Food;450;TXN-2025-003;Team lunch;❌ FAIL: Validation Error (Missing Name) → Slack Error;OK
+4.11.2025 09:45;David Wilson;david@company;Marketing;Software;2000;TXN-2025-004;Adobe subscription;❌ FAIL: Validation Error (Invalid Email) → Slack Error;OK
+4.11.2025 10:00;Emma Brown;emma.brown@company.com;Finance;Equipment;-500;TXN-2025-005;Refund test;❌ FAIL: Validation Error (Negative Amount) → Slack Error;OK
+4.11.2025 10:15;James Taylor;info@ctrlaltfeel.com;IT;Equipment;3500;TXN-2025-006;Laptop;✅ PASS: Validation → Approval Email → Reject →  Supabase Log →Gmail to Submitter ;OK
+5.11.2025 10:40;Hans Sazmann;h.sazmann@info.com;Marketing;Travel;500;TXN-2025-008;Taxi;❌ FAIL: Validation → Approval Email → Approve → Supabase Log→  API Success → Supabase Log →  Slack Failed;OK
+;;;;;;;;;
+;;;;;;;;;
+;;;;;;;;;
