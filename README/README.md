@@ -247,7 +247,7 @@ status: approval_pending | approved | rejected | api_success | api_failed
 
 ![Test Results](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/setup/test-data.csv%20.csv)
 
-![Log Results]Log Result:(https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/supabase-logs-overview.png)
+![Log Results](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/supabase-logs-overview.png)
 
 **Coverage:** 6/6 scenarios passed (100%)
 
