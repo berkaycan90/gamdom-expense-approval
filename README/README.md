@@ -51,8 +51,8 @@ Workflow 3: Mock External API
 **Workflow 2:** Processes approval decision and calls API  
 **Workflow 3:** Simulates external expense system
 
-![Workflow 1](assets/expense-validation-approval.png)
-![Workflow 2](assets/expense-approval-handler.png)
+![Workflow 1]![Workflow 1](https://github.com/berkaycann90/gamdom-expense-approval/blob/main/assets/expense-validation-approval.png?raw=true)
+![Workflow 2](/assets/expense-approval-handler.png)
 ![Workflow 3](assets/mock-external-api.png)
 
 ---
