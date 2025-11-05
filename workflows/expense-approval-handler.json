@@ -1,0 +1,607 @@
+{
+  "name": "Gamdom-Expense Approval Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "expense-approval",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -960,
+        -224
+      ],
+      "id": "46ec3b29-8023-4a19-8ba4-4095bd03e01d",
+      "name": "Approval Process Result",
+      "webhookId": "16dcca88-4898-43c9-bbbd-45b0701f236c"
+    },
+    {
+      "parameters": {
+        "jsCode": "const params = $input.all()[0].json.query;\n\nreturn [{\n  json: {\n    action: params.action,\n    transaction_id: params.transaction_id,\n    name: params.name,\n    email: params.email,\n    amount: parseFloat(params.amount)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -688,
+        -224
+      ],
+      "id": "d2240b19-8723-4e6e-bf9a-2d847ba25e01",
+      "name": "Parse Webhook Data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6121e612-42a1-4e7a-a7db-79400134a412",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "approve",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        -224
+      ],
+      "id": "ac34ff42-21d6-4740-aeda-3bfb6f4eb52e",
+      "name": "Check Approval Decision"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://berkaycann.app.n8n.cloud/webhook/mock-api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"transaction_id\": \"{{ $json.transaction_id }}\",\n  \"name\": \"{{ $json.name }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"amount\": {{ $json.amount }},\n  \"status\": \"approved\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        -384
+      ],
+      "id": "e86f5b57-6ec1-4d0e-b060-0fed2db58f76",
+      "name": "Call Mock API",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "tableId": "expense_logs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.transaction_id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.email }}"
+            },
+            {
+              "fieldId": "amount",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.amount }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "api_success"
+            },
+            {
+              "fieldId": "action_type",
+              "fieldValue": "api_call"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "Expense data successfully sent to external API"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -400
+      ],
+      "id": "3aab169e-16f5-46f1-96c3-342aa5fe3bc1",
+      "name": "Log API Success",
+      "credentials": {
+        "supabaseApi": {
+          "id": "xdUukAdZNCyzLfsN",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09Q0588Q8P",
+          "mode": "list",
+          "cachedResultName": "expense-automation"
+        },
+        "messageType": "block",
+        "blocksUi": "={\n  \"blocks\": [\n    {\n      \"type\": \"header\",\n      \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"✅ Expense Approved & Processed\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Transaction ID:*\\n{{ $('Parse Webhook Data').item.json.transaction_id }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Employee:*\\n{{ $('Parse Webhook Data').item.json.name }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Amount:*\\n{{ $('Parse Webhook Data').item.json.amount }}$\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Status:*\\nAPI Success ✓\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"✅ *Completed:* The expense has been approved by the manager and successfully sent to the external system for processing.\"\n      }\n    }\n  ]\n}\n  ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        368,
+        -400
+      ],
+      "id": "7118ee9d-5c97-441d-8796-9e9a2017a34a",
+      "name": "Send Success Summary",
+      "webhookId": "327e82b9-5ae4-476d-8f19-9755c18f5c87",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "uGBCPLa4eqIkcXCN",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "expense_logs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "={{ $json.transaction_id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.email }}"
+            },
+            {
+              "fieldId": "amount",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.amount }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "rejected"
+            },
+            {
+              "fieldId": "action_type",
+              "fieldValue": "approval_request"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "Expense rejected by manager"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -48
+      ],
+      "id": "ba11651f-e018-4f5b-b593-b6d4667874da",
+      "name": "Log Rejected",
+      "credentials": {
+        "supabaseApi": {
+          "id": "xdUukAdZNCyzLfsN",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=Expense Request Rejected - {{ $json.transaction_id }}",
+        "message": "=<p>Hi {{ $json.name }},</p> <p>Your expense request ({{ $json.transaction_id }}) for ${{ $json.amount }} has been <strong>rejected</strong> by the manager.</p> <p>Please contact your manager for more information.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        -48
+      ],
+      "id": "28b2e329-944a-4500-b066-aa987f0e4624",
+      "name": "Notify Submitter",
+      "webhookId": "e7990e95-a851-4acf-9648-340c8c7dafd4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gkwFcdT7qBnlLf1L",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "expense_logs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "={{ $json.transaction_id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.query.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.query.email }}"
+            },
+            {
+              "fieldId": "amount",
+              "fieldValue": "={{ $json.query.amount }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "approved"
+            },
+            {
+              "fieldId": "action_type",
+              "fieldValue": "approval_request"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "Expense approved by manager. Proceeding to API call."
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -448
+      ],
+      "id": "882e7843-f8d4-4b9e-b327-8d90a2ad3bff",
+      "name": "Log Approved",
+      "credentials": {
+        "supabaseApi": {
+          "id": "xdUukAdZNCyzLfsN",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "670934ae-3cd8-49e6-9b23-5feeb55cd23a",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "42bef29c-b29d-4e41-8e24-b0462496ff28",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 299,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -384
+      ],
+      "id": "3983ebe6-606e-42d6-bb0a-7c5663c52a94",
+      "name": "Check API Response"
+    },
+    {
+      "parameters": {
+        "tableId": "expense_logs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "transaction_id",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.transaction_id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.email }}"
+            },
+            {
+              "fieldId": "amount",
+              "fieldValue": "={{ $('Parse Webhook Data').item.json.amount }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "api_failed"
+            },
+            {
+              "fieldId": "action_type",
+              "fieldValue": "api_call"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "External API returned error or failed to respond"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -208
+      ],
+      "id": "127321dd-f8c4-4b55-8d54-9a861da471ca",
+      "name": "Log API Failure",
+      "credentials": {
+        "supabaseApi": {
+          "id": "xdUukAdZNCyzLfsN",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09Q0588Q8P",
+          "mode": "list",
+          "cachedResultName": "expense-automation"
+        },
+        "messageType": "block",
+        "blocksUi": "={\n  \"blocks\": [\n    {\n      \"type\": \"header\",\n      \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"⚠️ Expense Approved - Processing Failed\"\n      }\n    },\n    {\n      \"type\": \"section\",\n      \"fields\": [\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Transaction ID:*\\n{{ $('Parse Webhook Data').item.json.transaction_id }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Employee:*\\n{{ $('Parse Webhook Data').item.json.name }}\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Amount:*\\n{{ $('Parse Webhook Data').item.json.amount }}$\"\n        },\n        {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Approval Status:*\\n✅ Approved by Manager\"\n        }\n      ]\n    },\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"⚠️ *Issue:* The expense was approved but could not be processed due to an external API error.Error code:  {{ $('Call Mock API').item.json.error.status }}\\n\\n*Action Required:* IT team needs to investigate and retry the API call manually.\"\n      }\n    }\n  ]\n}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        384,
+        -208
+      ],
+      "id": "ba4cfa17-47d8-41a4-84fe-f72692a3201d",
+      "name": "Send API Failed Alert",
+      "webhookId": "327e82b9-5ae4-476d-8f19-9755c18f5c87",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "uGBCPLa4eqIkcXCN",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Webhook & Data Parsing\nReceives approval decision data via webhook and parses it for processing.",
+        "height": 624,
+        "width": 480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "51056aa6-ffc7-4c5e-81c6-43cfcadaa9a6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Approval Decision\nEvaluates the manager’s decision and logs the result",
+        "height": 624,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "6f7985d8-7a0a-42fe-bf1a-1e6924eefb47",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "API Integration & Response Check\nSends approved expense data to the external API",
+        "height": 624,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "05acd5e9-d499-4fc9-916a-6981e57ca2e2",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Logging & Notifications\nRecords API results and send a summary message ",
+        "height": 624,
+        "width": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "70e86adc-c12c-460b-a788-36adbcfe1aa6",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Approval Process Result": {
+      "main": [
+        [
+          {
+            "node": "Parse Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Webhook Data": {
+      "main": [
+        [
+          {
+            "node": "Check Approval Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Approval Decision": {
+      "main": [
+        [
+          {
+            "node": "Call Mock API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Rejected",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Mock API": {
+      "main": [
+        [
+          {
+            "node": "Check API Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log API Success": {
+      "main": [
+        [
+          {
+            "node": "Send Success Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Rejected": {
+      "main": [
+        [
+          {
+            "node": "Notify Submitter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Response": {
+      "main": [
+        [
+          {
+            "node": "Log API Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log API Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log API Failure": {
+      "main": [
+        [
+          {
+            "node": "Send API Failed Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f1c5bc84-0669-4406-87ce-b545746ad454",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "07a6767757273069f0a582916e3c57f8190196d81fe9eb37ed92ada5e69b4db8"
+  },
+  "id": "HL4JJQBUGE1ailiI",
+  "tags": []
+}
