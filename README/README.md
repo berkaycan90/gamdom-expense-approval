@@ -51,7 +51,7 @@ Workflow 3: Mock External API
 **Workflow 2:** Processes approval decision and calls API  
 **Workflow 3:** Simulates external expense system
 
-![Workflow 1]![Workflow 1](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/expense-validation-approval%20.png)
+![Workflow 1](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/expense-validation-approval%20.png)
 ![Workflow 2](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/expense-approval-%20handler.png)
 ![Workflow 3](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/mock-external-api.png)
 
@@ -141,8 +141,8 @@ Import in order:
 4. Validate amount (positive)
 5. Send approval email
 6. Log to Supabase
-
-![Approval Email](assets/gmail-approval-request.png)
+![Validation Error-Slack notification](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-validation-error.png)
+![Approval Email](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/gmail-approval-request.png)
 
 ### Workflow 2: Approval Handler
 
@@ -156,8 +156,9 @@ Import in order:
 - Log "rejected"
 - Email submitter
 
-![Slack Success](assets/slack-success.png)
-![Slack Error](assets/slack-validation-error.png)
+![Rejection E-mail]https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/gmail-rejection-notification.png
+![Slack Success(https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-success.png)
+![Slack Error](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/slack-api-failed.png)
 
 ### Workflow 3: Mock API
 
@@ -242,7 +243,9 @@ status: approval_pending | approved | rejected | api_success | api_failed
 **Setup:** Workflow 3 deactivated  
 **Result:** Slack "Approved but API failed" ✅
 
-![Test Results](assets/supabase-logs-overview.png)
+![Test Results](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/setup/test-data.csv%20.csv)
+
+![Log Results](https://github.com/berkaycan90/gamdom-expense-approval/blob/main/assets/supabase-logs-overview.png)
 
 **Coverage:** 6/6 scenarios passed (100%)
 
